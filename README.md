@@ -1,114 +1,100 @@
-<h1 align="center"> Python Pizza Planet </h1>
+# Pizza Planet hexagonal template
 
-![python-badge](https://img.shields.io/badge/python-%2314354C.svg?style=for-the-badge&logo=python&logoColor=white)
+## Development
 
-This is an example software for a pizzeria that takes customizable orders.
+### Infrastructure
 
-## Table of Contents
+Inside **_infrastructure/local_** folder, create a file called `terraform.tfvars` with the next content:
 
-- [Getting started](#getting-started)
-- [Running the backend project](#running-the-backend-project)
-- [Running the frontend](#running-the-frontend)
-- [Testing the backend](#testing-the-backend)
+```terraform
+REGION                 = "us-east-1"
+TF_AWS_ACCESS_KEY      = "AKI****************"
+TF_AWS_SECRET_KEY      = "gL************************"
+TF_AWS_SESSION_TOKEN   = ""
+ENV                    = "DEV"
+```
 
-## Getting started
+### Backend:
 
-You will need the following general tools:
+Inside **_api_** folder, create a `.env` file and copy the same content of the `.env.dev.example` file.
 
-- A Python interpreter installed. [3.8.x](https://www.python.org/downloads/release/python-3810/) is preffered.
+> Empty environment variables are secret and you must ask a member of the auth service team for them.
 
-- A text editor: preferably [Visual Studio Code](https://code.visualstudio.com/download)
 
-- Extensions such as [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) and [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
+### Virtual Environment
 
-## Running the backend project
-
-- Clone the repo
+A good practice is to have an isolated environment for each project. To do so type in your console the following:
 
 ```bash
-git clone https://github.com/ioet/python-pizza-planet.git
+$ cd <project_directory>/api
+$ python -m virtualenv .venv # FOR MACOS: python3 -m virtualenv .venv
+# Activate the virtual environment
+# WINDOWS
+$ .\venv\scripts\activate
+# LINUX/MACOS
+$ source ./venv/bin/activate
+# Install dependencies
+$ pip install -r requirements.txt
+$ pip install -r requirements.test.txt
+# You're all set
 ```
 
-- Create a virtual environment in the root folder of the project
+### Develop in local with localstack:
+
+Before you start the setup, make sure you have installed:
+- [Docker](https://www.docker.com/products/docker-desktop/), [Docker Compose](https://docs.docker.com/compose/) and optionally [NoSQL Workbench for DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.settingup.html) for showing the table's content
+
+
+After the requirements are satisfied, in the root folder of the project we can execute the next command:
 
 ```bash
-python3 -m venv venv
+docker-compose up --build
 ```
 
-- Activate the virtual environment (In vscode if you select the virtual env for your project it will activate once you open a new console window)
-
-_For linux/MacOS users:_
+This command should be executed only the first time or if you need to rebuild the services, in most scenarios
+we just need to execute the following command every time we want to run the project:
 
 ```bash
-source venv/bin/activate 
+docker-compose up
 ```
 
-_For windows users:_
+That's all, the localstack with dynamoDb table should be running.
 
-```cmd
-\path\to\env\Scripts\activate
-```
+How to see if the tables were already created.
+1. Open NoSQL Workbench
+2. In operation builder select new connection
+3. Add the DynamoDB local connection with the port 4566
+4. Inside Operation builder you should see the table/s defined in the common dynamo module.
 
-- Install all necessary dependencies:
+You could open the following url:
+- [http://localhost:4566/health](http://localhost:4566/health)
 
-```bash
-pip3 install -r requirements.txt
-```
 
-- Start the database (Only needed for the first run):
+and check if the DynamoDb says running
 
-```bash
-python3 manage.py db init
-python3 manage.py db migrate
-python3 manage.py db upgrade
-```
+## How to run the backend in a container :whale:
 
-- If you want to use the hot reload feature set FLASK_ENV before running the project:
+First, make sure you have docker installed in your machine.
 
-_For linux/MacOS users:_
+1 - Go to your terminal at api level level and prompt, `docker build -t clientapp:latest` to build the image.
 
-```bash
-export FLASK_ENV=development 
-```
+2 - Then you should run `docker run -d --name clientapp -p 8080:80 clientapp` to run the image in a conteiner.
 
-_For windows users:_
+3 - The backend should be available at  `http://localhost:8080/docs`.
 
-```CMD
-set FLASK_ENV=development
-```
 
-- Run the project with:
 
-```bash
-python3 manage.py run
-```
 
-## Running the frontend
 
-- Clone git UI submodule
+### PEP8 Compliance
+This codebase is pep8 compliant. To apply pep8 rules automatically you have to:
 
-```bash
-git submodule update --init
-```
+1. Install development testing.
 
-- Install Live Server extension if you don't have it from [here](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) on VSCode Quick Open (`Ctrl + P`)
+   `pip install -r requirements.test.txt`
+1. Run `autopep8`.
 
-```bash
-ext install ritwickdey.LiveServer
-```
+    `autopep8 --in-place --aggressive **/*.py`
+2. Check if there's any non-compliant code. This is in case that the tool didn't catch it.
 
-- To run the frontend, start `ui/index.html` file with Live Server (Right click `Open with Live Server`)
-
-- **Important Note** You have to open vscode in the root folder of the project.
-
-- **To avoid CORS errors** start the backend before the frontend, some browsers have CORS issues otherwise
-
-### Testing the backend
-
-- Make sure that you have `pytest` installed
-
-- Run the test command
-
-```bash
-python3 manage.py test
-```
+    `pycodestyle --quiet --statistics --exclude=.venv,.pytest-cache .`
