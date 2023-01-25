@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+
+  localstack:
+    container_name: "localstack_main"
+    image: localstack/localstack
+    environment:
+      - DEBUG=0
+      - LOCALSTACK_HOSTNAME=localhost
+      - TEST_AWS_ACCOUNT_ID=000000000000
+      - AWS_DEFAULT_REGION=us-east-1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    ports:
+      - '4566:4566'
+    volumes:
+      - "./localstack-volume:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  terraform_local:
+    container_name: terraform_local
+    depends_on:
+      - localstack
+    build:
+      context: ./infrastructure
+      dockerfile: dev.Dockerfile
+    healthcheck:
+      test: ["CMD", "[", "-f", "/tmp/done", "]"]
+      interval: 5s
+      timeout: 1s
+      retries: 12
+      start_period: 20s
