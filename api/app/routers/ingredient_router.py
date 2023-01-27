@@ -2,9 +2,9 @@ from typing import List
 
 from fastapi import APIRouter, Response
 
-from app.app.adapters.dynamodb.sizeAdapter import SizeAdapter
-from app.app.models.ingredient import Ingredient, IngredientCreate, IngredientUpdate
-from app.app.ports.ingredient_input_port import IngredientInputPort
+from api.app.adapters.dynamodb.sizeAdapter import SizeAdapter
+from api.app.models.ingredient import Ingredient, IngredientCreate, IngredientUpdate
+from api.app.ports.ingredient_input_port import IngredientInputPort
 
 ingredients = APIRouter()
 

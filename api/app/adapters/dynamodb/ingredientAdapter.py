@@ -2,8 +2,8 @@ import urllib.parse
 import uuid
 from abc import ABC
 
-from app.app.adapters.dynamodb.dynamodb_adapter import DynamoDBAdapter
-from app.app.models.ingredient import Ingredient
+from api.app.adapters.dynamodb.dynamodb_adapter import DynamoDBAdapter
+from api.app.models.ingredient import Ingredient
 
 
 class IngredientAdapter(DynamoDBAdapter, ABC):
@@ -33,3 +33,9 @@ class IngredientAdapter(DynamoDBAdapter, ABC):
         new_item['PK'] = f"ING#{var_id}"
         new_item['SK'] = f"ING#{var_id}"
         return super().create(new_item)
+
+    def exists(self, item_id: str) -> bool:
+        item = self.get_by_id(item_id)
+        if item:
+            return True
+        return False

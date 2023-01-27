@@ -1,10 +1,11 @@
+from abc import ABC
+
 import boto3
 from boto3.dynamodb.conditions import Attr
+from api.app.adapters.base_adapter import BaseAdapter
 
-from app.app.adapters.base_adapter import BaseAdapter
 
-
-class DynamoDBAdapter(BaseAdapter):
+class DynamoDBAdapter(BaseAdapter, ABC):
     def __init__(self, pk_identifier, sk_identifier):
         self.dynamodb = boto3.resource("dynamodb")
         self.table = self.dynamodb.Table("pizza-plannet")
@@ -19,9 +20,9 @@ class DynamoDBAdapter(BaseAdapter):
 
     def get_by_field(self, field, value):
         result = self.table.scan(
-            FilterExpression=Attr("PK").begins_with(self.pk_identifier)
-                             & Attr("SK").begins_with(self.sk_identifier)
-                             & Attr(field).eq(value)
+            FilterExpression=Attr("PK").begins_with(self.pk_identifier) &
+            Attr('SK').begins_with(self.sk_identifier) &
+            Attr(field).eq(value)
         )
         return result
 
@@ -52,3 +53,9 @@ class DynamoDBAdapter(BaseAdapter):
                 ":val2": updated_item["field2"],
             },
         )
+
+    def exists(self, item_id: str) -> bool:
+        item = self.get_by_id(item_id)
+        if item:
+            return True
+        return False

@@ -1,6 +1,6 @@
 import pytest
 
-from utils.functions import get_random_price, get_random_string
+from ..utils.functions import get_random_price, get_random_string
 
 
 def size_mock() -> dict:
@@ -38,3 +38,21 @@ def create_sizes(client, size_uri) -> list:
         new_size = client.post(size_uri, json=size_mock())
         sizes.append(new_size.json)
     return sizes
+
+
+@pytest.fixture
+def valid_size_create_input():
+    return {
+        "name": "Small",
+        "price": 3.5
+    }
+
+
+@pytest.fixture
+def size_created_response():
+    return {
+        "PK": "SIZ#123",
+        "SK": "SIZ#123",
+        "name": "Small",
+        "price": 3.5
+    }

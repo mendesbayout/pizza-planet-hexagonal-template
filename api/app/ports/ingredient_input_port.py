@@ -1,8 +1,8 @@
 from typing import List, Union
 
-from app.app.adapters.base_adapter import BaseAdapter
-from app.app.models.ingredient import Ingredient
-from app.app.use_cases.ingredient_use_cases import IngredientUseCases
+from api.app.adapters.base_adapter import BaseAdapter
+from api.app.models.ingredient import Ingredient
+from api.app.use_cases.ingredient_use_cases import IngredientUseCases
 
 
 class IngredientInputPort:

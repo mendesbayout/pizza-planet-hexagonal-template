@@ -1,9 +1,8 @@
 from typing import List, Union
 
-from app.app.adapters.base_adapter import BaseAdapter
-from app.app.adapters.dynamodb.sizeAdapter import SizeAdapter
-from app.app.models.size import Size, SizeBase, SizeUpdate, SizeCreate
-from app.app.utils.exceptions import ItemNotFoundError
+from api.app.adapters.dynamodb.sizeAdapter import SizeAdapter
+from api.app.models.size import Size, SizeUpdate, SizeCreate
+from api.app.utils.exceptions import ItemNotFoundError
 
 
 class SizeUseCases:
@@ -12,8 +11,8 @@ class SizeUseCases:
     def get_all(self) -> (List[Size], int):
         return self.size_adapter.get_all()
 
-    def get_by_id(self, id: str) -> Union[Size, None]:
-        return self.size_adapter.get_by_id(id)
+    def get_by_id(self, _id: str) -> Union[Size, None]:
+        return self.size_adapter.get_by_id(_id)
 
     def create(self, new_item: dict) -> Size:
         size_to_create = SizeCreate(**new_item)

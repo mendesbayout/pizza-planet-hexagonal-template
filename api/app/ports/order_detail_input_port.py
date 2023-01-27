@@ -1,8 +1,8 @@
 from typing import List, Union
 
-from app.app.adapters.base_adapter import BaseAdapter
-from app.app.models.order_detail import OrderDetail
-from app.app.use_cases.order_detail_use_cases import OrderDetailUseCases
+from api.app.adapters.base_adapter import BaseAdapter
+from api.app.models.order_detail import OrderDetail
+from api.app.use_cases.order_details_use_cases import OrderDetailUseCases
 
 
 class OrderDetailInputPort:
@@ -10,7 +10,7 @@ class OrderDetailInputPort:
         self.order_detail_use_cases = OrderDetailUseCases(adapter)
         super().__init__()
 
-    def get_all(self) -> (List[OrderDetail], int):
+    def get_all(self) -> (List[OrderDetail]):
         return self.order_detail_use_cases.get_all()
 
     def get_by_id(self, id: str) -> Union[OrderDetail, None]:

@@ -1,7 +1,12 @@
+from unittest.mock import patch
+
 import pytest
 
 from utils.functions import (shuffle_list, get_random_sequence,
-                               get_random_string)
+                             get_random_string)
+
+from api.app.adapters.dynamodb import dynamodb_adapter
+from api.app.adapters.dynamodb.orderAdapter import OrderAdapter
 
 
 def client_data_mock() -> dict:
@@ -47,3 +52,32 @@ def create_orders(client, order_uri, create_ingredients, create_sizes) -> list:
         })
         orders.append(new_order)
     return orders
+
+
+@pytest.fixture
+def order_created_response():
+    return {
+        "PK": "ORD#123",
+        "SK": "ORD#123",
+        "customer_name": "John Doe",
+        "total_price": 12.99
+    }
+
+
+@pytest.fixture
+def valid_order_create_input():
+    return {
+        "customer_name": "John Doe",
+        "total_price": 12.99
+    }
+
+
+def test_order_create(valid_order_create_input):
+    with patch.object(dynamodb_adapter, "create") as mock_create_method:
+        OrderAdapter.create(valid_order_create_input)
+        mock_create_method.assert_called_with({
+            "PK": "ORD#",
+            "SK": "ORD#",
+            "customer_name": valid_order_create_input["customer_name"],
+            "total_price": valid_order_create_input["total_price"]
+        })
