@@ -1,9 +1,9 @@
 from typing import List, Union
 
-from app.app.adapters.base_adapter import BaseAdapter
-from app.app.adapters.dynamodb.ingredientAdapter import IngredientAdapter
-from app.app.models.ingredient import Ingredient, IngredientCreate, IngredientUpdate
-from app.app.utils.exceptions import ItemNotFoundError
+from api.app.adapters.base_adapter import BaseAdapter
+from api.app.adapters.dynamodb.ingredientAdapter import IngredientAdapter
+from api.app.models.ingredient import Ingredient, IngredientCreate, IngredientUpdate
+from api.app.utils.exceptions import ItemNotFoundError
 
 
 class IngredientUseCases:
@@ -16,8 +16,8 @@ class IngredientUseCases:
     def get_all(self) -> (List[Ingredient], int):
         return self.adapter.get_all()
 
-    def get_by_id(self, id: str) -> Union[Ingredient, None]:
-        return self.adapter.get_by_id(id)
+    def get_by_id(self, _id: str) -> Union[Ingredient, None]:
+        return self.adapter.get_by_id(_id)
 
     def create(self, new_item: dict) -> Ingredient:
         ingredient_to_create = IngredientCreate(**new_item)

@@ -1,9 +1,9 @@
 from typing import List, Union
 
-from app.app.adapters.base_adapter import BaseAdapter
-from app.app.adapters.dynamodb.orderAdapter import OrderAdapter
-from app.app.models.order import Order, OrderCreate, OrderUpdate
-from app.app.utils.exceptions import ItemNotFoundError
+from api.app.adapters.base_adapter import BaseAdapter
+from api.app.adapters.dynamodb.orderAdapter import OrderAdapter
+from api.app.models.order import Order, OrderCreate, OrderUpdate
+from api.app.utils.exceptions import ItemNotFoundError
 
 
 class OrderUseCases:
@@ -16,8 +16,8 @@ class OrderUseCases:
     def get_all(self) -> (List[Order], int):
         return self.adapter.get_all()
 
-    def get_by_id(self, id: int) -> Union[Order, None]:
-        return self.adapter.get_by_id(id)
+    def get_by_id(self, _id: str) -> Union[Order, None]:
+        return self.adapter.get_by_id(_id)
 
     def create(self, new_item: dict) -> Order:
         order_to_create = OrderCreate(**new_item)

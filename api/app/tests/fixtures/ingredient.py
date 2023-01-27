@@ -18,8 +18,8 @@ def ingredient_created_response():
 
 @pytest.fixture
 def valid_ingredient_create_input():
-    valid_input = {
+    new_item = {
         'name': 'flour',
         'price': 0.5
     }
-    return valid_input
+    return new_item

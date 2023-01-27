@@ -3,8 +3,8 @@ from typing import List, Union
 
 from pydantic import BaseModel
 
-from app.app.models.order_detail import OrderDetail
-from app.app.models.size import Size
+from api.app.models.order_detail import OrderDetail
+from api.app.models.size import Size
 
 
 class OrderBase(BaseModel):

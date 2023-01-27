@@ -1,11 +1,12 @@
 import urllib.parse
 import uuid
+from abc import ABC
 
-from app.app.adapters.dynamodb.dynamodb_adapter import DynamoDBAdapter
-from app.app.models.size import Size
+from api.app.adapters.dynamodb.dynamodb_adapter import DynamoDBAdapter
+from api.app.models.size import Size
 
 
-class SizeAdapter(DynamoDBAdapter):
+class SizeAdapter(DynamoDBAdapter, ABC):
     def __init__(self, pk_identifier="SIZ", sk_identifier="SIZ") -> None:
         super().__init__(pk_identifier, sk_identifier)
 
@@ -32,3 +33,9 @@ class SizeAdapter(DynamoDBAdapter):
         new_item['PK'] = f"SIZ#{var_id}"
         new_item['SK'] = f"SIZ#{var_id}"
         return super().create(new_item)
+
+    def exists(self, item_id: str) -> bool:
+        item = self.get_by_id(item_id)
+        if item:
+            return True
+        return False
